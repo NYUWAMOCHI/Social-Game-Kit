@@ -35,13 +35,13 @@ bundle install
 ### 基本的な使用方法
 
 ```ruby
-require 'ssg'
+require 'sgk'
 
 # カードマスタデータ（ActiveRecordモデル）から抽選
 cards = GachaCard.all
 
 # エンジンの初期化
-engine = SSG::Gacha::Engine.new(cards)
+engine = SGK::Gacha::Engine.new(cards)
 
 # 単発抽選
 card = engine.draw
@@ -76,7 +76,7 @@ end
 # app/controllers/gacha_controller.rb
 class GachaController < ApplicationController
   def draw
-    engine = SSG::Gacha::Engine.new(GachaCard.all)
+    engine = SGK::Gacha::Engine.new(GachaCard.all)
     @result = engine.draw
 
     # ユーザーにカードを付与する処理など
@@ -87,7 +87,7 @@ class GachaController < ApplicationController
 
   def draw_multiple
     count = params[:count].to_i.clamp(1, 10)  # 最大10連
-    engine = SSG::Gacha::Engine.new(GachaCard.all)
+    engine = SGK::Gacha::Engine.new(GachaCard.all)
     @results = engine.draw_multiple(count)
 
     current_user.gacha_cards.push(*@results)
@@ -98,7 +98,7 @@ class GachaController < ApplicationController
   end
 
   def probabilities
-    engine = SSG::Gacha::Engine.new(GachaCard.all)
+    engine = SGK::Gacha::Engine.new(GachaCard.all)
 
     render json: engine.probabilities
   end
@@ -159,14 +159,14 @@ GachaCard.create!([
 
 ## APIリファレンス
 
-### SSG::Gacha::Engine
+### SGK::Gacha::Engine
 
 #### `initialize(card_relation)`
 
 ActiveRecord::Relationを受け取ります。
 
 ```ruby
-engine = SSG::Gacha::Engine.new(GachaCard.all)
+engine = SGK::Gacha::Engine.new(GachaCard.all)
 ```
 
 #### `draw`
@@ -194,7 +194,7 @@ probs = engine.probabilities
 # => {1=>70.0, 2=>25.0, 3=>4.0, 4=>1.0}
 ```
 
-### SSG::Gacha::Result
+### SGK::Gacha::Result
 
 ガチャ結果をラップするクラスです。
 
